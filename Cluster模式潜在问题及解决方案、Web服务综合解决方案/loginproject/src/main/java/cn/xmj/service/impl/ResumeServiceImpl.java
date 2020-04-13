@@ -4,7 +4,7 @@
  * Date:     2020/3/16 10:08
  * Description:
  */
-package cn.xmj.pojo.impl;
+package cn.xmj.service.impl;
 
 import cn.xmj.dao.ResumeDao;
 import cn.xmj.pojo.Resume;
@@ -12,7 +12,6 @@ import cn.xmj.service.ResumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
