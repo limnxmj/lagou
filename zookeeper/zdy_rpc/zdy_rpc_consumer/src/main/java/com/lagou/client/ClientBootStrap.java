@@ -17,9 +17,6 @@ public class ClientBootStrap {
                 e.printStackTrace();
             }
         }
-
-//        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(1588221293623l)));
-//        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(1588105305753l)));
     }
 
 
