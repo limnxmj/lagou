@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ZkClientUtil {
 
-    private final String ZK_SERVER = "192.168.238.156:2181";
+    private final String ZK_SERVER = "127.0.0.1:2181";
 
     private final String ZK_BASE = "/rpcServer";
 
