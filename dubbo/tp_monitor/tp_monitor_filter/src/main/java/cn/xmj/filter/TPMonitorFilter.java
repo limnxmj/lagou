@@ -9,6 +9,7 @@ package cn.xmj.filter;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
+import org.apache.dubbo.rpc.support.RpcUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -43,12 +44,13 @@ public class TPMonitorFilter implements Filter, Runnable {
         try {
             result = invoker.invoke(invocation);
         } finally {
-            long endTime = System.currentTimeMillis();
-
-            String serviceName = invocation.getAttachment("interface");
-            String methodName = invocation.getMethodName();
-            long useTime = endTime - beginTime;
-            put(serviceName + "_" + methodName, endTime, useTime);
+            if (!RpcUtils.isAsync(invoker.getUrl(), invocation)) {
+                long endTime = System.currentTimeMillis();
+                String serviceName = invocation.getAttachment("interface");
+                String methodName = invocation.getMethodName();
+                long useTime = endTime - beginTime;
+                put(serviceName + "_" + methodName, endTime, useTime);
+            }
         }
         return result;
     }
