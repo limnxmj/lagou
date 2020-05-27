@@ -14,6 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(name = "lagou-service-user")
 public interface UserFeignClient {
 
-    @RequestMapping(value = "/info/{token}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/info/{token}", method = RequestMethod.GET)
     public String info(@PathVariable(value = "token") String token);
 }
