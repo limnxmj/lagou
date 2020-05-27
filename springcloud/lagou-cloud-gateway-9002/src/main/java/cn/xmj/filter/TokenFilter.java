@@ -6,6 +6,8 @@
  */
 package cn.xmj.filter;
 
+import cn.xmj.feignclient.UserFeignClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -21,12 +23,16 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Component
 public class TokenFilter implements GlobalFilter, Ordered {
 
     private static Set<String> execuleUrls = new HashSet<>();
+
+    @Autowired
+    private UserFeignClient userFeignClient;
 
     static {
         execuleUrls.add("/user");
@@ -41,10 +47,18 @@ public class TokenFilter implements GlobalFilter, Ordered {
 
         String clientIp = request.getRemoteAddress().getHostString();
         String uri = request.getURI().toString();
+
         if (needFilter(uri)) {
             MultiValueMap<String, HttpCookie> cookies = request.getCookies();
             HttpCookie token = (HttpCookie) cookies.get("token");
-            if (token == null || StringUtils.isEmpty(token.getValue())) {
+            HttpCookie email = (HttpCookie) cookies.get("email");
+            if (email == null || token == null || StringUtils.isEmpty(token.getValue())) {
+                response.setStatusCode(HttpStatus.FORBIDDEN); // 状态码
+                String data = "Request be denied!";
+                DataBuffer wrap = response.bufferFactory().wrap(data.getBytes());
+                return response.writeWith(Mono.just(wrap));
+            }
+            if (!Objects.equals(email, userFeignClient.info(token.getValue()))) {
                 response.setStatusCode(HttpStatus.FORBIDDEN); // 状态码
                 String data = "Request be denied!";
                 DataBuffer wrap = response.bufferFactory().wrap(data.getBytes());
