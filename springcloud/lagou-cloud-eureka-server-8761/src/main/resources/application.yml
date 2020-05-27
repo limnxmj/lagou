@@ -1,0 +1,18 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: lagou-cloud-eureka-server
+
+eureka:
+  instance:
+    hostname: LagouCloudEurekaServerA
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:@project.version@
+  client:
+    service-url:
+      defaultZone: http://LagouCloudEurekaServerB:8762/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+

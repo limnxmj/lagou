@@ -1,0 +1,75 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: lagou-service-code
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lagou?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+  jpa:
+    database: MySQL
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl  #避免将驼峰命名转换为下划线命名
+#  cloud:
+#    # config客户端配置,和ConfigServer通信，并告知ConfigServer希望获取的配置信息在哪个文件中
+#    config:
+#      name: lagou-service-code  #配置文件名称
+#      profile: dev  #后缀名称
+#      label: master #分支名称
+#      uri: http://localhost:9006    #ConfigServer配置中心地址
+#  rabbitmq:
+#    host: 127.0.0.1
+#    port: 5672
+#    username: guest
+#    password: guest
+#注册到Eureka服务中心
+eureka:
+  client:
+    service-url:
+      # 注册到集群，就把多个Eurekaserver地址使用逗号连接起来即可；注册到单实例（非集群模式），那就写一个就ok
+      defaultZone: http://LagouCloudEurekaServerA:8761/eureka,http://LagouCloudEurekaServerB:8762/eureka
+  instance:
+    prefer-ip-address: true  #服务实例中显示ip，而不是显示主机名（兼容老的eureka版本）
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:@project.version@
+
+#针对的被调用方微服务名称,不加就是全局生效
+lagou-service-email:
+  ribbon:
+    #请求连接超时时间
+    ConnectTimeout: 5000
+    #请求处理超时时间
+    ##########################################Feign超时时长设置
+    ReadTimeout: 5000
+    #对所有操作都进行重试
+    OkToRetryOnAllOperations: true
+    ####根据如上配置，当访问到故障请求的时候，它会再尝试访问一次当前实例（次数由MaxAutoRetries配置），
+    ####如果不行，就换一个实例进行访问，如果还不行，再换一次实例访问（更换次数由MaxAutoRetriesNextServer配置），
+    ####如果依然不行，返回失败信息。
+    MaxAutoRetries: 0 #对当前选中实例重试次数，不包括第一次调用
+    MaxAutoRetriesNextServer: 0 #切换实例的重试次数
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #负载策略调整
+logging:
+  level:
+    # Feign日志只会对日志级别为debug的做出响应
+    com.lagou.edu.controller.service.ResumeServiceFeignClient: debug
+# 开启Feign的熔断功能
+feign:
+  hystrix:
+    enabled: false
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            ##########################################Hystrix的超时时长设置
+            timeoutInMilliseconds: 15000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
