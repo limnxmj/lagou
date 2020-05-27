@@ -65,7 +65,7 @@ public class IpFilter implements GlobalFilter, Ordered {
             }
             if (count > limitCount) {
                 response.setStatusCode(HttpStatus.FORBIDDEN); // 状态码
-                String data = "Request be denied!";
+                String data = "您频繁进⾏注册，请求已被拒绝!";
                 DataBuffer wrap = response.bufferFactory().wrap(data.getBytes());
                 return response.writeWith(Mono.just(wrap));
             }

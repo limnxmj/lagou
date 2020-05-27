@@ -18,8 +18,8 @@ spring:
       server:
         git:
           uri: https://github.com/limnxmj/lagou-config-repo.git #配置git服务地址
-            username: limn_xmj@163.com #配置git用户名
-            password: xxx #配置git密码
+          username: limn_xmj@163.com #配置git用户名
+          password: xxx #配置git密码
           search-paths:
             - lagou-config-repo
       # 读取分支
@@ -29,6 +29,10 @@ spring:
     port: 5672
     username: guest
     password: guest
+#针对的被调用方微服务名称,不加就是全局生效
+#lagou-service-resume:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #负载策略调整
 # springboot中暴露健康检查等断点接口
 management:
   endpoints:
