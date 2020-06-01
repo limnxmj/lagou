@@ -20,17 +20,23 @@ spring:
           #uri: http://127.0.0.1:8096  # 目标服务地址  自动投递微服务（部署多实例）  动态路由：uri配置的应该是一个服务名称，而不应该是一个具体的服务实例的地址
           uri: lb://lagou-service-user                                                                    # gateway网关从服务注册中心获取实例信息然后负载后路由
           predicates:                                         # 断言：路由条件，Predicate 接受一个输入参数，返回一个布尔值结果。该接口包含多种默 认方法来将 Predicate 组合成其他复杂的逻辑（比如：与，或，非）。
-            - Path=/user/**
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=1
         - id: service-code-router # 我们自定义的路由 ID，保持唯一
           #uri: http://127.0.0.1:8096  # 目标服务地址  自动投递微服务（部署多实例）  动态路由：uri配置的应该是一个服务名称，而不应该是一个具体的服务实例的地址
           uri: lb://lagou-service-code                                                                    # gateway网关从服务注册中心获取实例信息然后负载后路由
           predicates:                                         # 断言：路由条件，Predicate 接受一个输入参数，返回一个布尔值结果。该接口包含多种默 认方法来将 Predicate 组合成其他复杂的逻辑（比如：与，或，非）。
-            - Path=/code/**
+            - Path=/api/code/**
+          filters:
+            - StripPrefix=1
         - id: service-email-router # 我们自定义的路由 ID，保持唯一
           #uri: http://127.0.0.1:8096  # 目标服务地址  自动投递微服务（部署多实例）  动态路由：uri配置的应该是一个服务名称，而不应该是一个具体的服务实例的地址
           uri: lb://lagou-service-email                                                                    # gateway网关从服务注册中心获取实例信息然后负载后路由
           predicates:                                         # 断言：路由条件，Predicate 接受一个输入参数，返回一个布尔值结果。该接口包含多种默 认方法来将 Predicate 组合成其他复杂的逻辑（比如：与，或，非）。
-            - Path=/email/**
+            - Path=/api/email/**
+          filters:
+            - StripPrefix=1
     config:
       name: lagou-cloud-gateway  #配置文件名称
       profile: dev  #后缀名称
@@ -43,6 +49,10 @@ spring:
     password: guest
 management:
   endpoints:
-  web:
-  exposure:
-  include: "*"
+    web:
+      exposure:
+        include: "*"
+  # 暴露健康接口的细节
+  endpoint:
+    health:
+      show-details: always

@@ -15,10 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AuthCodeServiceImpl implements AuthCodeService {
@@ -32,6 +29,8 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         authCode.setEmail(email);
         authCode.setCode(String.valueOf(code));
         Calendar nowTime = Calendar.getInstance();
+        Date date = new Date();
+        nowTime.setTime(date);
         authCode.setCreatetime(nowTime.getTime());
         nowTime.add(Calendar.MINUTE, 10);
         authCode.setExpiretime(nowTime.getTime());
@@ -51,7 +50,8 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         List<AuthCode> authCodes = authCodeDao.findAll(example, sort);
 
         Calendar nowTime = Calendar.getInstance();
-        nowTime.add(Calendar.MINUTE, 10);
+        Date date = new Date();
+        nowTime.setTime(date);
         if (CollectionUtils.isEmpty(authCodes) || !Objects.equals(authCodes.get(0).getCode(), code)) {
             return 1;
         }

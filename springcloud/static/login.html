@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
-    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://localhost/static/js/jquery.min.js"></script>
     <script type="text/javascript" >
         $(document).ready(function () {
             $("#btn").bind("click", function () {
@@ -21,11 +21,11 @@
 
                 $.ajax({
                     type: "get",
-                    url: "http://localhost:9002/user/login/"+email+"/"+password,
+                    url: "http://192.168.211.1:9002/api/user/login/"+email+"/"+password,
                     dataType: 'text',
                     success: function (data) {
                         if (!isEmpty(data)) {
-                           window.location.href = "welcome.html";
+                           window.location.href = "http://localhost/static/welcome.html";
                         } else {
                             $("#errMsg").html("登录失败");
                         }
