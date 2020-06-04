@@ -1,0 +1,12 @@
+[
+ {
+
+ "resource":"findResumeOpenState",
+ "limitApp":"default",
+ "grade":1,
+ "count":1,
+ "strategy":0,
+ "controlBehavior":0,
+ "clusterMode":false
+ }
+]
