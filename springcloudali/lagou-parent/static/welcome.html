@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎</title>
+    <script type="text/javascript" src="http://localhost/static/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#email").html(getCookie("login_email"));
+
+        });
+        function getCookie(c_name) {
+            if (document.cookie.length > 0)     {
+                c_start = document.cookie.indexOf(c_name + "=")           
+                if (c_start != -1){ 
+                    c_start = c_start + c_name.length + 1 
+                    c_end = document.cookie.indexOf(";", c_start) 
+                    if (c_end == -1)   
+                        c_end = document.cookie.length   
+                        return unescape(document.cookie.substring(c_start, c_end))   
+                    } 
+                } 
+            return "" 
+        }
+    </script>
+</head>
+<body>
+    <span id="email"></span>欢迎登录系统
+</body>
+</html>

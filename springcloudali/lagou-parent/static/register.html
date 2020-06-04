@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <script type="text/javascript" src="http://localhost/static/js/jquery.min.js"></script>
+    <script type="text/javascript" >
+    function validate(){
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var repassword = $("#repassword").val();   
+        if(isEmpty(email)) {
+            $("#errMsg").html("请输入邮箱");
+            return false;
+        }
+        if(isEmpty(email)) {
+            $("#errMsg").html("请输入邮箱");
+            return false;
+        }
+        if(isEmpty(password)) {
+            $("#errMsg").html("请输入密码");
+            return false;
+        }
+        if(isEmpty(repassword)) {
+            $("#errMsg").html("请输入确认密码");
+            return false;
+        }
+        if(password!=repassword) {
+            $("#errMsg").html("两次输入密码不一致");
+            return false;
+        }
+        return true;
+    }
+    function isEmpty(val){
+        return val==null || ""==val;
+    }
+    var clock = '';
+    var nums = 60;
+    var btn;
+    function sendCode(thisBtn){ 
+        btn = $(thisBtn);
+        btn.attr("disabled",true);;
+        btn.disabled = true; //将按钮置为不可点击
+        btn.html(nums+'秒后可重新获取');
+        clock = setInterval(doLoop, 1000); //一秒执行一次
+    }
+    function doLoop(){
+        nums--;
+        if(nums > 0){
+            btn.html(nums+'秒后可重新获取');
+        }else{
+            clearInterval(clock); //清除js定时器
+            btn.removeAttr("disabled");
+            btn.html('点击发送验证码');
+            nums = 60; //重置时间
+        }
+     }
+        $(document).ready(function () {
+            $("#codeATag").bind("click", function(){
+                $("#errMsg").html("");
+                var flag = validate();
+                if(!flag){
+                    return;
+                }
+                sendCode(this);
+                var email = $("#email").val();
+                var password = $("#password").val();
+                var repassword = $("#repassword").val();
+                $.ajax({
+                    type: "get",
+                    url: "http://localhost:9002/api/code/create/"+email,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (!data.success) {
+                            $("#errMsg").html(data.message);
+                        } 
+                    }
+                });
+            });
+            $("#btn").bind("click", function () {
+                $("#errMsg").html("");
+                var flag = validate();
+                if(!flag){
+                    return;
+                }
+                var code = $("#code").val();
+                if(isEmpty(code)){
+                    $("#errMsg").html("请输入验证码");
+                    return;
+                }
+                var email = $("#email").val();
+                $.ajax({
+                    type: "get",
+                    url: "http://localhost:9002/api/code/validate/"+email+"/"+code,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data==0) {
+                           $.ajax({
+                            type: "get",
+                            url: "http://localhost:9002/api/user/isRegistered/"+email,
+                            dataType: 'json',
+                            success: function (data) {
+                                if(data){
+                                    $("#errMsg").html("邮箱已注册");
+                                    return;
+                                }
+                                register(email, code, password);
+                            }
+                        });
+                        } else if(data==1){
+                            $("#errMsg").html("注册失败");
+                        } else if(data==2){
+                            $("#errMsg").html("验证码失效，请重新获取");
+                        }
+                    }
+                });
+            });
+        });
+        function isRegistered(email){
+            $.ajax({
+                type: "get",
+                url: "http://localhost:9002/api/user/isRegistered/"+email,
+                dataType: 'json',
+                success: function (data) {
+                    return data;
+                }
+            });
+        }
+        function register(){
+            var code = $("#code").val();
+            var email = $("#email").val();
+            var password = $("#password").val();
+            $.ajax({
+                type: "get",
+                url: "http://localhost:9002/api/user/register/"+email+"/"+password+"/"+code,
+                dataType: 'json',
+                success: function (data) {
+                    if ("-1"==data) {
+                        $("#errMsg").html("邮箱已注册过");
+                    }else if("1"==data){
+                        $("#errMsg").html("验证码错误");
+                    }else if("2"==data){
+                        $("#errMsg").html("验证码超时");
+                    } else {
+                        window.location.href = "http://localhost/static/welcome.html";
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <form id="form" action="">
+        <div>邮箱：<input type="text" name="email" id="email"/></div>
+        <div>密码：<input type="password" name="password" id="password"/></div>
+        <div>确认密码：<input type="password" name="repassword" id="repassword"/></div>
+        <div>验证码：<input type="text" name="code" id="code" /><a href="javascript:void(0)" id="codeATag">获取验证码</a></div>
+        <div><span id="errMsg" style="color:red;"></span></div>
+        <div><input type="button" id="btn" value="提交"/></div>
+    </form>
+</body>
+</html>

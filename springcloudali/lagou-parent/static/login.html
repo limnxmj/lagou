@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script type="text/javascript" src="http://localhost/static/js/jquery.min.js"></script>
+    <script type="text/javascript" >
+        $(document).ready(function () {
+            $("#btn").bind("click", function () {
+                $("#errMsg").html("");
+                var email = $("#email").val();
+                var password = $("#password").val();
+                if(isEmpty(email)){
+                    $("#errMsg").html("请输入邮箱");
+                    return;
+                }
+                if(isEmpty(password)){
+                    $("#errMsg").html("请输入密码");
+                    return;
+                }
+
+                $.ajax({
+                    type: "get",
+                    url: "http://localhost:9002/api/user/login/"+email+"/"+password,
+                    dataType: 'text',
+                    success: function (data) {
+                        if (!isEmpty(data)) {
+                           window.location.href = "http://localhost/static/welcome.html";
+                        } else {
+                            $("#errMsg").html("登录失败");
+                        }
+                    }
+                });
+            });
+        });
+        function isEmpty(val){
+            return val==null || ""==val;
+        }
+    </script>
+</head>
+<body>
+    <form id="form" action="">
+        <div>邮箱：<input type="text" name="email" id="email"/></div>
+        <div>密码：<input type="password" name="password" id="password"/></div>
+        <div><span id="errMsg" style="color:red;"></span></div>
+        <div><input type="button" id="btn" value="提交"/></div>
+        <div><a href="register.html">注册新账号</a></div>
+    </form>
+</body>
+</html>

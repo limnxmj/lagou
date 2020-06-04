@@ -1,0 +1,35 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: lagou-service-email
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: ad064f8a-2bb4-4da0-b813-5dc83f6b75d7  # 命名空间id
+        group: DEFAULT_GROUP  # 默认分组就是DEFAULT_GROUP，如果使用默认分组可以不配置
+        file-extension: yaml   #默认properties
+  main:
+    allow-bean-definition-overriding: true
+# springboot中暴露健康检查等断点接口
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  # 暴露健康接口的细节
+  endpoint:
+    health:
+      show-details: always
+
+dubbo:
+  scan:
+    base-packages: com.lagou.edu.service.impl
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: spring-cloud://localhost

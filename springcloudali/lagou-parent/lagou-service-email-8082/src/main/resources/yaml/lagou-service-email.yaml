@@ -1,0 +1,8 @@
+spring:
+  mail:
+    host: smtp.163.com
+    username: limn_xmj@163.com
+    password: OXQNRVDKGFWARLFS
+    properties.mail.smtp.port: 465
+    properties.mail.smtp.ssl.enable: true
+    from: limn_xmj@163.com
