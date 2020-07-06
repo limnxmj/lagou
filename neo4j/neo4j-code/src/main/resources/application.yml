@@ -1,0 +1,11 @@
+spring:
+  data:
+    neo4j:
+      username: neo4j
+      password: liming_0987
+      uri: bolt://127.0.0.1:7687
+  freemarker:
+    suffix: .html
+    template-loader-path: classpath:/templates/
+#  resources:
+#    static-locations: classpath:static/
