@@ -251,53 +251,58 @@ make && make install
 **5.nginx配置**
 
 ~~~
+##从github上下载lua脚本nginx-lua-fastdfs-GraphicsMagick
+git clone https://github.com/hpxl/nginx-lua-fastdfs-GraphicsMagick.git
+cd nginx-lua-fastdfs-GraphicsMagick/lua
+cp ./* /usr/local/nginx/conf/lua
+
+#修改脚本中的tracker ip信息和gm的命令变量
+vim /usr/local/nginx/conf/lua/fastdfs.lua
+
+fdfs:set_tracker("192.168.238.160", 22122)
+local command = "/usr/local/GraphicsMagick/bin/gm convert " 
+
+~~~
+
+![image-20200715143440474](C:\Users\MingLi\AppData\Roaming\Typora\typora-user-images\image-20200715143440474.png)
+
+~~~
+#修改nginx配置
 vim /usr/local/nginx/conf/nginx.conf
+
 server {
     listen       8888;
     server_name  localhost;    
-
-    location ~/group[0-9]/ {
-        ngx_fastdfs_module;
-    }
 
     location /lua {
         default_type 'text/plain';
         content_by_lua 'ngx.say("Hello, Lua!")';
     }
 
-    location / {
-        root   /resource/image;            
-        index  index.html index.htm;
+    location /group1/M00 {
+        alias /home/fastdfs/data;
+
+        set $image_root "/home/fastdfs/data";
+        if ($uri ~ "/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/([a-zA-Z0-9]+)/(.*)") {
+            set $image_dir "$image_root/$3/$4/";
+            set $image_name "$5";
+            set $file "$image_dir$image_name";
+        }
+
+        if (!-f $file) {
+            # 关闭lua代码缓存，方便调试lua脚本
+            #lua_code_cache off;
+            content_by_lua_file "/usr/local/nginx/conf/lua/fastdfs.lua";
+        }
+        ngx_fastdfs_module;
     }
 
-    location ~* ^((.+\.(jpg|jpeg|gif|png))_(\d+)x(\d+)\.(jpg|jpeg|gif|png))$ {
-        root /resource/image;
-        if (!-f $request_filename) {
-            add_header X-Powered-By 'Lua GraphicsMagick';
-            add_header file-path $request_filename;
-            set $request_filepath /resource/image$2;
-            set $width $4;
-            set $height $5;
-            set $ext $6;
-            content_by_lua_file /usr/local/nginx/lua/ImageResizer.lua;
-        }            
-    }
 }
+
 ~~~
 
 ~~~
-mkdir /resource/image -p
-chmod 777 -R /resource/image/
-mkdir /usr/local/nginx/lua -p
-~~~
-
-~~~
-vim /usr/local/nginx/lua/ImageResizer.lua
-
-#添加如下配置
-local command = "/usr/local/GraphicsMagick/bin/gm convert   -auto-orient-strip " .. ngx.var.request_filepath .. " -resize " .. ngx.var.width .. "x" .. ngx.var.height .. " +profile \"*\" " .. ngx.var.request_filepath .. "_" .. ngx.var.width .. "x" .. ngx.var.height .. "." .. ngx.var.ext;
-os.execute(command);    
-ngx.exec(ngx.var.request_uri);
+chmod -R 777 /home/fastdfs/data/
 ~~~
 
 ~~~
@@ -309,15 +314,15 @@ http://192.168.238.160:8888/lua
 ![image-20200715091220265](C:\Users\MingLi\AppData\Roaming\Typora\typora-user-images\image-20200715091220265.png)
 
 ~~~
-http://192.168.238.160:8888/1.png
-http://192.168.238.160:8888/1.png_100x100.png
+http://192.168.238.160:8888/group1/M00/00/00/wKjuoF8N73KAWKqOAABDL5pi8X4134.png
+http://192.168.238.160:8888/group1/M00/00/00/wKjuoF8N73KAWKqOAABDL5pi8X4134.png_80x80.png
 ~~~
 
-![image-20200715094421435](C:\Users\MingLi\AppData\Roaming\Typora\typora-user-images\image-20200715094421435.png)
+![image-20200715143658537](C:\Users\MingLi\AppData\Roaming\Typora\typora-user-images\image-20200715143658537.png)
 
+![image-20200715143718571](C:\Users\MingLi\AppData\Roaming\Typora\typora-user-images\image-20200715143718571.png)
 
-
-![image-20200715094350712](C:\Users\MingLi\AppData\Roaming\Typora\typora-user-images\image-20200715094350712.png)
+![image-20200715144222382](C:\Users\MingLi\AppData\Roaming\Typora\typora-user-images\image-20200715144222382.png)
 
 **安装过程遇到的问题**
 
