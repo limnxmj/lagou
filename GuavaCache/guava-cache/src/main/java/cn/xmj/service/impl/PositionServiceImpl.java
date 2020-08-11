@@ -51,7 +51,9 @@ public class PositionServiceImpl implements PositionService {
         if (!CollectionUtils.isEmpty(positions)) {
             return positions;
         }
-        return findPositionFromRedis();
+        positions = findPositionFromRedis();
+        flushGuava(positions);
+        return positions;
     }
 
     private List<Position> findPositionFromGuavaCache() {
@@ -102,6 +104,14 @@ public class PositionServiceImpl implements PositionService {
             }
         }
         return positions;
+    }
+
+    private void flushGuava(List<Position> positions) {
+        if (!CollectionUtils.isEmpty(positions)) {
+            for (Position position : positions) {
+                positionGuavaCache.put(String.valueOf(position.getId()), position);
+            }
+        }
     }
 
     @Override
