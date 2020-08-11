@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>position</title>
+    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+    <div>
+        <#if (positions?exists && positions?size > 0 )>
+            <#list positions as position>
+                <div>
+                        <div>${position.name}</div>
+                        <div>${position.salary}</div>
+                        <div>${position.city}</div>
+                </div><hr/>
+            </#list>
+        </#if>
+    </div>
+
+</body>
+</html>
