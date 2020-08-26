@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>待付款</title>
+    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btn").bind("click", function () {
+                $("#form").submit();
+            });
+        });
+    </script>
+</head>
+<body>
+    <form id="form" action="/order/pay/${orderId}">
+        <div>${message}</div>
+        <input type="button" name="btn" id="btn" value="付款"/>
+    </form>
+
+</body>
+</html>

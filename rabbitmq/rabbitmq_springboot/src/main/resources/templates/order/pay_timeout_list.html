@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>付款超时历史</title>
+</head>
+<body>
+<#if timeoutOrderPayMap?exists>
+    <table>
+        <tr>
+            <th>订单编号</th>
+            <th>商品名称</th>
+            <th>商品数量</th>
+            <th>商品单价</th>
+            <th>商品总价</th>
+        </tr>
+        <#list timeoutOrderPayMap?keys as key>
+        <tr>
+            <td>${timeoutOrderPayMap[key].orderId}</td>
+            <td>${timeoutOrderPayMap[key].goods_name}</td>
+            <td>${timeoutOrderPayMap[key].goods_count}</td>
+            <td>${timeoutOrderPayMap[key].unit_price}</td>
+            <td>${timeoutOrderPayMap[key].total_price}</td>
+        </tr>
+        </#list>
+    </table>
+</#if>
+</body>
+</html>
