@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职位浏览</title>
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".btn_wrapper > a").bind("click", function(){
+                var user_id=$("#user_id").val();
+                var action = $(this).attr("action");
+                var job_code = $(this).parent(".btn_wrapper").prev().children(".company_name").find("a[name='job_company']").attr("job_code");
+                var data = {
+                    user_id:user_id,
+                    act_time:  new Date().getTime(),
+                    action:action,
+                    job_code:job_code
+                }
+                console.log(data);
+                $.ajax({
+                    url: 'http://xmj/kafka/tp_individual',
+                    type: 'POST',
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    data:data,
+                    success: function (data) {
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="_header">
+        <div style="text-align: right;width: 90%;" >
+            <span>小明</span>
+            <input type="hidden" name="user_id" id="user_id" value="10000"/>
+        </div>
+    </div>
+    <div class="_body" style="border-top:1px solid #32373e;">
+        <div class="list_item_top" style="padding:10px 0px;border-bottom: 1px solid #32373e;">
+            <div class="position">
+                <div class="p_top">
+                    <a class="position_link">
+                        <h3 style="max-width: 180px;">高级前端开发工程师</h3> 
+                    </a>
+                </div>
+            </div>
+            <div class="company">
+                <div class="company_name">
+                    <a name="job_company" job_code="20001">泰康保险集团</a>
+                </div>
+                <div class="p_bot">
+                    <div class="li_b_l">
+                        <span class="money">15k-25k·16薪</span>
+                        <!--<i></i>-->经验3-5年 / 本科
+                    </div>
+                </div>
+            </div>
+            <div class="btn_wrapper">
+                <a href="javascript:void(0);" action="click">点击|</a>
+                <a href="javascript:void(0);" action="job_collect">收藏|</a>
+                <a href="javascript:void(0);" action="cv_send">投简历|</a>
+                <a href="javascript:void(0);" action="cv_upload">上传简历</a>
+            </div>
+        </div>   
+    </div>
+    <div class="list_item_top" style="padding:10px 0px;border-bottom: 1px solid #32373e;">
+        <div class="position">
+            <div class="p_top">
+                <a class="position_link">
+                    <h3 style="max-width: 180px;">高级java开发工程师</h3> 
+                </a>
+            </div>
+        </div>
+        <div class="company">
+            <div class="company_name">
+                <a name="job_company" job_code="20002">滴滴</a>
+            </div>
+            <div class="p_bot">
+                <div class="li_b_l">
+                    <span class="money">25k-35k·16薪</span>
+                    <!--<i></i>-->经验3-5年 / 本科
+                </div>
+            </div>
+        </div>
+        <div class="btn_wrapper">
+            <a href="javascript:void(0);" action="click">点击|</a>
+            <a href="javascript:void(0);" action="job_collect">收藏|</a>
+            <a href="javascript:void(0);" action="cv_send">投简历|</a>
+            <a href="javascript:void(0);" action="cv_upload">上传简历</a>
+        </div>
+    </div>
+</body>
+</html>
