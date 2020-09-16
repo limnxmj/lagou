@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>秒杀</title>
+    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+    <div class="_header">
+        <div style="text-align: right;width: 90%;" >
+            <span>小明</span>
+            <input type="hidden" name="user_id" id="user_id" value="10000"/>
+        </div>
+    </div>
+    <div class="_body" style="border-top:1px solid #32373e;">
+        <#if (goods?exists && goods?size > 0 )>
+            <#list goods as g>
+                <div style="padding:10px 0px;border-bottom: 1px solid #32373e;">
+                    <div>${g.goodsName}</div>
+                    <div>库存：${g.goodsCount}</div>
+                    <div><a href="/seckill/buynow/10000/${g.id}">立即抢购</a></div>
+                </div>
+            </#list>
+        </#if>
+    </div>
+
+</body>
+</html>

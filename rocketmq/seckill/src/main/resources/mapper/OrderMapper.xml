@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xmj.mapper.OrderMapper">
+
+    <insert id="saveOrder" parameterType="cn.xmj.pojo.Order">
+        insert into `order`
+        (id, order_id, user_id, goods_id, order_status)
+        values
+        (null, ${orderId}, ${userId}, ${goodsId}, ${orderStatus})
+    </insert>
+
+    <select id="findOrderByOrderId" resultType="cn.xmj.pojo.Order">
+        select * from `order` where order_id = #{orderId}
+    </select>
+
+    <update id="updateOrderStatus">
+        update `order` set order_status = ${orderStatus} where order_id = #{orderId}
+    </update>
+</mapper>

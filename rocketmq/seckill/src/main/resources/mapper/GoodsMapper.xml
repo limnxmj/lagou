@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.xmj.mapper.GoodsMapper">
+
+    <select id="getGoodsCount" resultType="java.lang.Integer">
+        select goods_count from goods where id = ${id}
+    </select>
+
+    <select id="findGoodsById" resultType="cn.xmj.pojo.Goods">
+        select * from goods where id = ${id}
+    </select>
+
+    <select id="findGoods" resultType="cn.xmj.pojo.Goods">
+        select * from goods
+    </select>
+
+    <update id="updateGoodsCount" parameterType="cn.xmj.pojo.Goods">
+        update goods set goods_count = #{goodsCount} where id = #{id} and goods_count > 1
+    </update>
+</mapper>
