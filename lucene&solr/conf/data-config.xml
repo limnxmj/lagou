@@ -1,0 +1,23 @@
+<dataConfig>
+    <!-- 这是mysql的配置 -->
+    <dataSource name="ds_solr_book" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/solr_book" user="root" password="root"/>
+    <dataSource name="ds_lagou_position" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/lagou_position" user="root" password="root"/>
+    <document> 
+        <!-- query是一条sql，代表在数据库查找出来的数据 --> 
+        <entity name="book" dataSource="ds_solr_book" query="select * from book">
+            <!-- 每一个field映射着数据库中列与文档中的域，column是数据库列，name是 solr的域(必须是在managed-schema文件中配置过的域才行) -->
+            <field column="id" name="id"/>
+            <field column="name" name="name"/>
+            <field column="price" name="price"/>
+            <field column="description" name="desc"/>
+        </entity>
+        <entity name="lagou_position" dataSource="ds_lagou_position" query="select id, companyName, positionAdvantage, companyId, positionName, salary from position">
+            <field column="companyName" name="companyName"/>
+            <field column="id" name="id"/>
+            <field column="positionAdvantage" name="positionAdvantage"/>
+            <field column="companyId" name="companyId"/>
+            <field column="positionName" name="positionName"/>
+            <field column="salary" name="salary"/>
+        </entity>
+    </document>
+</dataConfig>
