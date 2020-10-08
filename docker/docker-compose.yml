@@ -1,0 +1,52 @@
+version: "3.0"
+services:
+  nginx:
+    image: nginx:1.18.0
+    environment:
+      - TZ=Asia/beijing
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /docker/nginx/log:/var/log/nginx
+      - /docker/nginx/www:/etc/nginx/html
+      - /etc/letsencrypt:/etc/letsencrypt
+    deploy:
+      mode: replicated
+      replicas: 2
+  mysql:
+    image: mysql:5.7.30 
+    ports:
+      - 13306:3306
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+      --default-time-zone=+8:00 
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+    volumes:
+       - "/docker/mysql/db:/var/lib/mysql"
+    deploy:
+      mode: replicated
+      replicas: 2
+  redis:
+    image: redis:5.0.9
+    environment:
+      - TZ=Asia/beijing
+    ports:
+      - 6379:6379
+    volumes:
+      - /docker/redis/data:/data
+    deploy: 
+      mode: replicated 
+      replicas: 2
+  hot:
+    image: lgedu/hot:1.0
+    ports:
+      - 8080:8080
+    deploy: 
+      mode: replicated 
+      replicas: 2
